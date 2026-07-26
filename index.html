@@ -111,28 +111,6 @@
       50% { opacity: 1; }
     }
     
-    /* ─── DROP ZONE ─── */
-    .upload-zone {
-      max-width: 600px;
-      margin: 4rem auto;
-      padding: 3rem 2rem;
-      border: 2px dashed rgba(201,160,255,0.3);
-      border-radius: 1rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      background: var(--surface);
-    }
-    
-    .upload-zone:hover, .upload-zone.dragover {
-      border-color: var(--accent);
-      background: rgba(201,160,255,0.05);
-    }
-    
-    .upload-zone p { color: var(--muted); font-size: 0.9rem; }
-    .upload-zone .icon { font-size: 2rem; margin-bottom: 1rem; }
-    #file-input { display: none; }
-    
     /* ─── GALLERY ─── */
     .gallery { padding: 2rem; max-width: 1400px; margin: 0 auto; }
     .gallery-header { text-align: center; margin-bottom: 3rem; }
@@ -140,7 +118,7 @@
     
     .gallery-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 1.5rem;
     }
     
@@ -179,7 +157,7 @@
     .art-card-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+      background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%);
       opacity: 0;
       transition: opacity 0.3s ease;
       display: flex;
@@ -188,7 +166,7 @@
     }
     
     .art-card:hover .art-card-overlay { opacity: 1; }
-    .art-card-label { font-size: 0.8rem; color: rgba(255,255,255,0.9); }
+    .art-card-label { font-size: 0.8rem; color: rgba(255,255,255,0.9); font-weight: 500; }
     
     /* ─── LIGHTBOX ─── */
     .lightbox {
@@ -209,7 +187,7 @@
     
     .lightbox img {
       max-width: 90vw;
-      max-height: 90vh;
+      max-height: 88vh;
       object-fit: contain;
       border-radius: 0.5rem;
       box-shadow: 0 40px 100px rgba(0,0,0,0.8);
@@ -255,6 +233,28 @@
     .lightbox-prev { left: 1.5rem; }
     .lightbox-next { right: 1.5rem; }
     
+    /* ─── ADD MORE ─── */
+    .add-more {
+      max-width: 600px;
+      margin: 3rem auto;
+      padding: 3rem 2rem;
+      border: 2px dashed rgba(201,160,255,0.3);
+      border-radius: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: var(--surface);
+    }
+    
+    .add-more:hover {
+      border-color: var(--accent);
+      background: rgba(201,160,255,0.05);
+    }
+    
+    .add-more p { color: var(--muted); font-size: 0.9rem; }
+    .add-more .icon { font-size: 2rem; margin-bottom: 1rem; }
+    #file-input { display: none; }
+    
     /* ─── FOOTER ─── */
     .footer {
       text-align: center;
@@ -267,7 +267,7 @@
     /* ─── RESPONSIVE ─── */
     @media (max-width: 768px) {
       .gallery-grid { grid-template-columns: 1fr; }
-      .upload-zone { margin: 2rem 1rem; }
+      .add-more { margin: 2rem 1rem; }
     }
   </style>
 </head>
@@ -285,20 +285,41 @@
     </div>
   </section>
   
-  <!-- UPLOAD -->
-  <div class="upload-zone" id="upload-zone">
-    <div class="icon">🎨</div>
-    <p>Drag & drop Keegan's artwork here<br>or click to browse</p>
-    <input type="file" id="file-input" accept="image/*" multiple>
-  </div>
-  
   <!-- GALLERY -->
   <section class="gallery" id="gallery">
     <div class="gallery-header">
       <h2>Selected Works</h2>
     </div>
-    <div class="gallery-grid" id="gallery-grid"></div>
+    <div class="gallery-grid" id="gallery-grid">
+      <div class="art-card" onclick="openLightbox(0)">
+        <img src="https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-1.jpg" alt="Keegan's Artwork 1">
+        <div class="art-card-overlay"><span class="art-card-label">Untitled — 1</span></div>
+      </div>
+      <div class="art-card" onclick="openLightbox(1)">
+        <img src="https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-2.jpg" alt="Keegan's Artwork 2">
+        <div class="art-card-overlay"><span class="art-card-label">Untitled — 2</span></div>
+      </div>
+      <div class="art-card" onclick="openLightbox(2)">
+        <img src="https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-3.jpg" alt="Keegan's Artwork 3">
+        <div class="art-card-overlay"><span class="art-card-label">Untitled — 3</span></div>
+      </div>
+      <div class="art-card" onclick="openLightbox(3)">
+        <img src="https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-4.jpg" alt="Keegan's Artwork 4">
+        <div class="art-card-overlay"><span class="art-card-label">Untitled — 4</span></div>
+      </div>
+      <div class="art-card" onclick="openLightbox(4)">
+        <img src="https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-5.jpg" alt="Keegan's Artwork 5">
+        <div class="art-card-overlay"><span class="art-card-label">Untitled — 5</span></div>
+      </div>
+    </div>
   </section>
+  
+  <!-- ADD MORE -->
+  <div class="add-more" id="add-zone" onclick="document.getElementById('file-input').click()">
+    <div class="icon">🎨</div>
+    <p>Add more artwork<br>drag & drop or click to browse</p>
+    <input type="file" id="file-input" accept="image/*" multiple>
+  </div>
   
   <!-- LIGHTBOX -->
   <div class="lightbox" id="lightbox">
@@ -313,55 +334,62 @@
   
   <script>
     // ─── State ───
-    let artworks = [];
+    const artworks = [
+      'https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-1.jpg',
+      'https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-2.jpg',
+      'https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-3.jpg',
+      'https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-4.jpg',
+      'https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-5.jpg'
+    ];
     let currentIndex = 0;
-    
-    // ─── Upload Zone ───
-    const zone = document.getElementById('upload-zone');
-    const input = document.getElementById('file-input');
-    
-    zone.addEventListener('click', () => input.click());
-    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
-    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
-    zone.addEventListener('drop', e => {
-      e.preventDefault();
-      zone.classList.remove('dragover');
-      handleFiles(e.dataTransfer.files);
-    });
-    input.addEventListener('change', () => handleFiles(input.files));
-    
-    function handleFiles(files) {
-      Array.from(files).forEach(file => {
-        if (!file.type.startsWith('image/')) return;
-        const reader = new FileReader();
-        reader.onload = e => addArtwork(e.target.result, file.name);
-        reader.readAsDataURL(file);
-      });
-    }
-    
-    // ─── Gallery ───
-    function addArtwork(src, name) {
-      artworks.push(src);
-      const card = document.createElement('div');
-      card.className = 'art-card';
-      card.innerHTML = `<img src="${src}" alt="${name}"><div class="art-card-overlay"><span class="art-card-label">${name}</span></div>`;
-      card.addEventListener('click', () => openLightbox(artworks.length - 1));
-      document.getElementById('gallery-grid').appendChild(card);
-      setTimeout(() => card.classList.add('visible'), 50);
-      observeCard(card);
-    }
+    let userArtworks = [];
     
     // ─── Scroll Reveal ───
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, i) => {
         if (entry.isIntersecting) {
-          setTimeout(() => entry.target.classList.add('visible'), i * 100);
+          setTimeout(() => entry.target.classList.add('visible'), i * 120);
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1 });
+    }, { threshold: 0.08 });
     
-    function observeCard(card) { observer.observe(card); }
+    document.querySelectorAll('.art-card').forEach((card, i) => {
+      setTimeout(() => card.classList.add('visible'), i * 120);
+    });
+    
+    // ─── Add More Artwork ───
+    const addInput = document.getElementById('file-input');
+    const addZone = document.getElementById('add-zone');
+    
+    addZone.addEventListener('dragover', e => { e.preventDefault(); addZone.classList.add('dragover'); });
+    addZone.addEventListener('dragleave', () => addZone.classList.remove('dragover'));
+    addZone.addEventListener('drop', e => {
+      e.preventDefault();
+      addZone.classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    });
+    addInput.addEventListener('change', () => handleFiles(addInput.files));
+    
+    function handleFiles(files) {
+      Array.from(files).forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = e => addUserArtwork(e.target.result, file.name);
+        reader.readAsDataURL(file);
+      });
+    }
+    
+    function addUserArtwork(src, name) {
+      userArtworks.push(src);
+      const grid = document.getElementById('gallery-grid');
+      const card = document.createElement('div');
+      card.className = 'art-card visible';
+      card.style.aspectRatio = 'auto';
+      card.innerHTML = `<img src="${src}" alt="${name}"><div class="art-card-overlay"><span class="art-card-label">${name}</span></div>`;
+      card.addEventListener('click', () => openLightbox(artworks.length + userArtworks.length - 1));
+      grid.appendChild(card);
+    }
     
     // ─── Lightbox ───
     const lightbox = document.getElementById('lightbox');
@@ -369,7 +397,8 @@
     
     function openLightbox(index) {
       currentIndex = index;
-      lbImg.src = artworks[index];
+      const allArt = [...artworks, ...userArtworks];
+      lbImg.src = allArt[index];
       lightbox.classList.add('open');
       document.body.style.overflow = 'hidden';
     }
@@ -380,11 +409,11 @@
     }
     
     function navigateLightbox(dir) {
-      currentIndex = (currentIndex + dir + artworks.length) % artworks.length;
-      lbImg.src = artworks[currentIndex];
+      const allArt = [...artworks, ...userArtworks];
+      currentIndex = (currentIndex + dir + allArt.length) % allArt.length;
+      lbImg.src = allArt[currentIndex];
     }
     
-    // Keyboard nav
     document.addEventListener('keydown', e => {
       if (!lightbox.classList.contains('open')) return;
       if (e.key === 'Escape') closeLightbox();
@@ -392,7 +421,6 @@
       if (e.key === 'ArrowRight') navigateLightbox(1);
     });
     
-    // Click outside to close
     lightbox.addEventListener('click', e => {
       if (e.target === lightbox) closeLightbox();
     });
