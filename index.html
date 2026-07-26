@@ -56,10 +56,10 @@
     }
     
     .intro-title {
-      font-size: clamp(3rem, 10vw, 8rem);
+      font-size: clamp(2.5rem, 8vw, 6rem);
       font-weight: 800;
       letter-spacing: -0.03em;
-      line-height: 0.95;
+      line-height: 1;
       text-align: center;
       opacity: 0;
       animation: fadeUp 1s ease 0.6s forwards;
@@ -67,6 +67,9 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      max-width: 90vw;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
     
     .intro-subtitle {
@@ -145,14 +148,26 @@
     }
     
     .art-card img {
-      width: 100%;
-      height: 100%;
+      width: 110%;
+      height: 110%;
       object-fit: cover;
       display: block;
-      transition: transform 0.6s ease;
+      margin: -5%;
+      transition: transform 6s ease-in-out, opacity 0.5s ease;
     }
     
-    .art-card:hover img { transform: scale(1.05); }
+    .art-card:hover img { transform: scale(1.1) translateX(2%); }
+    .art-card img.kenburns {
+      animation: kenburns 20s ease-in-out infinite alternate;
+    }
+    
+    @keyframes kenburns {
+      0%   { transform: scale(1.0)  translate(0%, 0%); }
+      25%  { transform: scale(1.08) translate(-2%, -1%); }
+      50%  { transform: scale(1.05) translate(1%, 2%); }
+      75%  { transform: scale(1.1)  translate(-1%, 1%); }
+      100% { transform: scale(1.0)  translate(2%, -2%); }
+    }
     
     .art-card-overlay {
       position: absolute;
@@ -292,23 +307,23 @@
     </div>
     <div class="gallery-grid" id="gallery-grid">
       <div class="art-card" onclick="openLightbox(0)">
-        <img src="https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-1.jpg" alt="Keegan's Artwork 1">
+        <img class="kenburns" src="https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-1.jpg" alt="Keegan's Artwork 1">
         <div class="art-card-overlay"><span class="art-card-label">Untitled — 1</span></div>
       </div>
       <div class="art-card" onclick="openLightbox(1)">
-        <img src="https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-2.jpg" alt="Keegan's Artwork 2">
+        <img class="kenburns" src="https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-2.jpg" alt="Keegan's Artwork 2">
         <div class="art-card-overlay"><span class="art-card-label">Untitled — 2</span></div>
       </div>
       <div class="art-card" onclick="openLightbox(2)">
-        <img src="https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-3.jpg" alt="Keegan's Artwork 3">
+        <img class="kenburns" src="https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-3.jpg" alt="Keegan's Artwork 3">
         <div class="art-card-overlay"><span class="art-card-label">Untitled — 3</span></div>
       </div>
       <div class="art-card" onclick="openLightbox(3)">
-        <img src="https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-4.jpg" alt="Keegan's Artwork 4">
+        <img class="kenburns" src="https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-4.jpg" alt="Keegan's Artwork 4">
         <div class="art-card-overlay"><span class="art-card-label">Untitled — 4</span></div>
       </div>
       <div class="art-card" onclick="openLightbox(4)">
-        <img src="https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-5.jpg" alt="Keegan's Artwork 5">
+        <img class="kenburns" src="https://raw.githubusercontent.com/lucasdan411/artfolio/main/artwork/keegan-5.jpg" alt="Keegan's Artwork 5">
         <div class="art-card-overlay"><span class="art-card-label">Untitled — 5</span></div>
       </div>
     </div>
