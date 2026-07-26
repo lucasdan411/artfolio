@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keegan's Art</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --bg: #0a0a0f;
+      --surface: #12121a;
+      --text: #f0f0f5;
+      --muted: #8888aa;
+      --accent: #c9a0ff;
+      --accent2: #7eb8ff;
+    }
+    
+    html { scroll-behavior: smooth; }
+    
+    body {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+    
+    /* ─── INTRO ─── */
+    .intro {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .intro-bg {
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,160,255,0.12) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 40% at 70% 60%, rgba(126,184,255,0.08) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    
+    .intro-label {
+      font-size: 0.75rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.3s forwards;
+    }
+    
+    .intro-title {
+      font-size: clamp(3rem, 10vw, 8rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 0.95;
+      text-align: center;
+      opacity: 0;
+      animation: fadeUp 1s ease 0.6s forwards;
+      background: linear-gradient(135deg, var(--text) 0%, var(--accent) 50%, var(--accent2) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .intro-subtitle {
+      margin-top: 1.5rem;
+      font-size: 1rem;
+      color: var(--muted);
+      opacity: 0;
+      animation: fadeUp 1s ease 0.9s forwards;
+    }
+    
+    .scroll-hint {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--muted);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 1s ease 1.4s forwards;
+    }
+    
+    .scroll-arrow {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--muted), transparent);
+      animation: scrollPulse 2s ease infinite;
+    }
+    
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+    
+    /* ─── DROP ZONE ─── */
+    .upload-zone {
+      max-width: 600px;
+      margin: 4rem auto;
+      padding: 3rem 2rem;
+      border: 2px dashed rgba(201,160,255,0.3);
+      border-radius: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: var(--surface);
+    }
+    
+    .upload-zone:hover, .upload-zone.dragover {
+      border-color: var(--accent);
+      background: rgba(201,160,255,0.05);
+    }
+    
+    .upload-zone p { color: var(--muted); font-size: 0.9rem; }
+    .upload-zone .icon { font-size: 2rem; margin-bottom: 1rem; }
+    #file-input { display: none; }
+    
+    /* ─── GALLERY ─── */
+    .gallery { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+    .gallery-header { text-align: center; margin-bottom: 3rem; }
+    .gallery-header h2 { font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--muted); }
+    
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .art-card {
+      position: relative;
+      border-radius: 0.75rem;
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--surface);
+      aspect-ratio: 4/3;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease, box-shadow 0.3s ease;
+    }
+    
+    .art-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .art-card:hover {
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+      transform: translateY(-5px) scale(1.02);
+    }
+    
+    .art-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s ease;
+    }
+    
+    .art-card:hover img { transform: scale(1.05); }
+    
+    .art-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      display: flex;
+      align-items: flex-end;
+      padding: 1rem;
+    }
+    
+    .art-card:hover .art-card-overlay { opacity: 1; }
+    .art-card-label { font-size: 0.8rem; color: rgba(255,255,255,0.9); }
+    
+    /* ─── LIGHTBOX ─── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(5,5,10,0.97);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      backdrop-filter: blur(20px);
+    }
+    
+    .lightbox.open { opacity: 1; pointer-events: all; }
+    
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 0.5rem;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+      transform: scale(0.9);
+      transition: transform 0.4s ease;
+    }
+    
+    .lightbox.open img { transform: scale(1); }
+    
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .lightbox-close:hover { background: rgba(255,255,255,0.2); }
+    
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      font-size: 2rem;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .lightbox-nav:hover { background: rgba(255,255,255,0.2); }
+    .lightbox-prev { left: 1.5rem; }
+    .lightbox-next { right: 1.5rem; }
+    
+    /* ─── FOOTER ─── */
+    .footer {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--muted);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+    }
+    
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      .gallery-grid { grid-template-columns: 1fr; }
+      .upload-zone { margin: 2rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+  
+  <!-- INTRO -->
+  <section class="intro">
+    <div class="intro-bg"></div>
+    <div class="intro-label">Visual Artist</div>
+    <h1 class="intro-title">Keegan</h1>
+    <p class="intro-subtitle">A curated collection</p>
+    <div class="scroll-hint">
+      <span>Explore</span>
+      <div class="scroll-arrow"></div>
+    </div>
+  </section>
+  
+  <!-- UPLOAD -->
+  <div class="upload-zone" id="upload-zone">
+    <div class="icon">🎨</div>
+    <p>Drag & drop Keegan's artwork here<br>or click to browse</p>
+    <input type="file" id="file-input" accept="image/*" multiple>
+  </div>
+  
+  <!-- GALLERY -->
+  <section class="gallery" id="gallery">
+    <div class="gallery-header">
+      <h2>Selected Works</h2>
+    </div>
+    <div class="gallery-grid" id="gallery-grid"></div>
+  </section>
+  
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+    <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">‹</button>
+    <img id="lightbox-img" src="" alt="">
+    <button class="lightbox-nav lightbox-next" onclick="navigateLightbox(1)">›</button>
+  </div>
+  
+  <!-- FOOTER -->
+  <div class="footer">Keegan · Art Portfolio</div>
+  
+  <script>
+    // ─── State ───
+    let artworks = [];
+    let currentIndex = 0;
+    
+    // ─── Upload Zone ───
+    const zone = document.getElementById('upload-zone');
+    const input = document.getElementById('file-input');
+    
+    zone.addEventListener('click', () => input.click());
+    zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      handleFiles(e.dataTransfer.files);
+    });
+    input.addEventListener('change', () => handleFiles(input.files));
+    
+    function handleFiles(files) {
+      Array.from(files).forEach(file => {
+        if (!file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = e => addArtwork(e.target.result, file.name);
+        reader.readAsDataURL(file);
+      });
+    }
+    
+    // ─── Gallery ───
+    function addArtwork(src, name) {
+      artworks.push(src);
+      const card = document.createElement('div');
+      card.className = 'art-card';
+      card.innerHTML = `<img src="${src}" alt="${name}"><div class="art-card-overlay"><span class="art-card-label">${name}</span></div>`;
+      card.addEventListener('click', () => openLightbox(artworks.length - 1));
+      document.getElementById('gallery-grid').appendChild(card);
+      setTimeout(() => card.classList.add('visible'), 50);
+      observeCard(card);
+    }
+    
+    // ─── Scroll Reveal ───
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 100);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    function observeCard(card) { observer.observe(card); }
+    
+    // ─── Lightbox ───
+    const lightbox = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lightbox-img');
+    
+    function openLightbox(index) {
+      currentIndex = index;
+      lbImg.src = artworks[index];
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    
+    function closeLightbox() {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    
+    function navigateLightbox(dir) {
+      currentIndex = (currentIndex + dir + artworks.length) % artworks.length;
+      lbImg.src = artworks[currentIndex];
+    }
+    
+    // Keyboard nav
+    document.addEventListener('keydown', e => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') navigateLightbox(-1);
+      if (e.key === 'ArrowRight') navigateLightbox(1);
+    });
+    
+    // Click outside to close
+    lightbox.addEventListener('click', e => {
+      if (e.target === lightbox) closeLightbox();
+    });
+    
+    // ─── Parallax on scroll ───
+    window.addEventListener('scroll', () => {
+      const scrolled = window.scrollY;
+      const introTitle = document.querySelector('.intro-title');
+      if (introTitle) {
+        introTitle.style.transform = `translateY(${scrolled * 0.3}px)`;
+        introTitle.style.opacity = Math.max(0, 1 - scrolled / 500);
+      }
+    });
+  </script>
+</body>
+</html>
