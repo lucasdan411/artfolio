@@ -246,8 +246,32 @@
     }
     
     .lightbox-nav:hover { background: rgba(255,255,255,0.2); }
-    .lightbox-prev { left: 1.5rem; }
-    .lightbox-next { right: 1.5rem; }
+    .lightbox-prev { left: 1rem; }
+    .lightbox-next { right: 1rem; }
+    
+    .lightbox-back {
+      display: none;
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(255,255,255,0.1);
+      border: none;
+      color: white;
+      font-size: 1rem;
+      padding: 0.6rem 1rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      z-index: 1001;
+      backdrop-filter: blur(10px);
+      transition: background 0.2s;
+    }
+    .lightbox-back:hover { background: rgba(255,255,255,0.2); }
+    
+    @media (max-width: 768px) {
+      .lightbox-nav { display: none; }
+      .lightbox-back { display: flex; align-items: center; gap: 0.4rem; }
+      .intro { height: 100svh; }
+    }
     
     /* ─── ADD MORE ─── */
     .add-more {
@@ -339,6 +363,7 @@
   
   <!-- LIGHTBOX -->
   <div class="lightbox" id="lightbox">
+    <button class="lightbox-back" id="lightbox-back" onclick="closeLightbox()">← Back</button>
     <button class="lightbox-close" onclick="closeLightbox()">✕</button>
     <button class="lightbox-nav lightbox-prev" onclick="navigateLightbox(-1)">‹</button>
     <img id="lightbox-img" src="" alt="">
